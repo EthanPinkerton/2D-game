@@ -1,9 +1,9 @@
-package com.company;
+package pinkerton.ethan;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class Main{
+public class Main {
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("Gaming");
@@ -12,7 +12,6 @@ public class Main{
         JLabel emptyLabel = new JLabel("");
         emptyLabel.setPreferredSize(new Dimension(500, 500));
         frame.getContentPane().add(emptyLabel, BorderLayout.CENTER);
-
         frame.pack();
         frame.setVisible(true);
     }
