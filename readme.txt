@@ -10,4 +10,4 @@ Building
 --------
 * `gradle build` -> compiles sources. 
 * `gradle run` -> compiles and runs.
-* Intelij has intergrated gradle support, building from there is possible.
+* IntelliJ has intergrated gradle support, building from there is possible.

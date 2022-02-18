@@ -1,9 +1,22 @@
+import org.gradle.internal.os.OperatingSystem
+
 apply plugin: 'java'
 apply plugin: 'application'
+project.ext.lwjglVersion = "3.3.0"
+
+switch (OperatingSystem.current()) {
+	case OperatingSystem.LINUX:
+		project.ext.lwjglNatives = "natives-linux"
+		break
+	case OperatingSystem.WINDOWS:
+		project.ext.lwjglNatives = "natives-windows"
+		break
+}
 
 repositories {
 	mavenCentral()
 }
+
 sourceSets {
 	main {
 		java {
@@ -12,5 +25,17 @@ sourceSets {
 	}
 }
 
+dependencies {
+	implementation platform("org.lwjgl:lwjgl-bom:3.3.0")
+	implementation "org.lwjgl:lwjgl"
+	implementation "org.lwjgl:lwjgl-glfw"
+	implementation "org.lwjgl:lwjgl-jawt"
+	implementation "org.lwjgl:lwjgl-opengl"
+	implementation "org.lwjgl:lwjgl-opengles"
+	runtimeOnly "org.lwjgl:lwjgl::$lwjglNatives"
+	runtimeOnly "org.lwjgl:lwjgl-glfw::$lwjglNatives"
+	runtimeOnly "org.lwjgl:lwjgl-opengl::$lwjglNatives"
+	runtimeOnly "org.lwjgl:lwjgl-opengles::$lwjglNatives"
+}
 group = 'pinkerton.ethan'
 mainClassName = 'pinkerton.ethan.Main'
