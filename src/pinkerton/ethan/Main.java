@@ -23,15 +23,14 @@ import org.lwjgl.opengl.GLCapabilities;
 
 public class Main {
 	public static long _window;
-    public static GLCapabilities _caps;
+	public static GLCapabilities _caps;
 	public static void init() {
 		glfwInit();
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
-        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
-        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
-        glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
+		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 		_window = glfwCreateWindow(500, 500, "Simple Window", 0l, 0l);
 		glfwMakeContextCurrent(_window);
 		glfwShowWindow(_window);
@@ -41,6 +40,7 @@ public class Main {
 
 	public static void main(String[] argv) {
 		init();
+		System.out.printf("info: gl vendor %s, version %s\n", glGetString(GL_VENDOR), glGetString(GL_VERSION));
 		do {
 			glfwPollEvents();
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
