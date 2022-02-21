@@ -38,4 +38,4 @@ dependencies {
 	runtimeOnly "org.lwjgl:lwjgl-opengles::$lwjglNatives"
 }
 group = 'pinkerton.ethan'
-mainClassName = 'pinkerton.ethan.Main'
+mainClassName = 'pinkerton.ethan.main'

@@ -16,7 +16,34 @@
 
 package pinkerton.ethan.graphics;
 
+import pinkerton.ethan.window.window;
+import pinkerton.ethan.window.dimensions;
+import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GL20;
+import org.lwjgl.opengl.GLCapabilities;
+
 public class renderer {
-	public renderer() {
+	public static renderer create(final window window_handle) {
+		GLCapabilities capabilities = GL.createCapabilities();
+		renderer result = new renderer();
+
+		/*
+		 * This renderer uses functions present in the versions 2 and lower.
+		 * Validate that the GPU supports these features.
+		 */
+		if (!capabilities.OpenGL20) {
+			System.out.printf("error: video card does not support OpenGL version 2 or greater, required features not present.\n");
+			return null;
+		}
+
+		/* Set the viewport based on the window's dimensions. */
+		dimensions dimensions = new dimensions();
+		dimensions.position(window_handle);
+		GL20.glViewport(0, 0, dimensions.x[0], dimensions.y[0]);
+
+		System.out.printf("info:  GL version %s, %s.\n", GL20.glGetString(GL20.GL_VERSION), GL20.glGetString(GL20.GL_RENDERER));
+		return result;
 	}
+
+
 }
