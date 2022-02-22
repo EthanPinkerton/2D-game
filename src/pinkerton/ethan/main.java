@@ -17,6 +17,7 @@ package pinkerton.ethan;
 
 import pinkerton.ethan.window.*;
 import pinkerton.ethan.graphics.*;
+import pinkerton.ethan.maths.*;
 
 public final class main {
 	public static final String assets = "res";
@@ -27,9 +28,8 @@ public final class main {
 		shader   s = shader.create(String.format("%s/shaders/default.glsl.vert", assets), String.format("%s/shaders/default.glsl.frag", assets));
 
 
-		w.destroy();
-		s.destroy();
-
+		vec2 vector = new vec2(4.0f, 5.0f);
+		System.out.printf("Unit vector, %s, %s, angle %f\n", vector.toString(), vec2.unit(vector).toString(), vector.angle());
 
 		w.destroy();
 		s.destroy();
