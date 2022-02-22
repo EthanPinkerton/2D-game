@@ -18,7 +18,7 @@ package pinkerton.ethan.window;
 
 import org.lwjgl.glfw.GLFW;
 
-public class dimensions {
+public final class dimensions {
     public int x[];
     public int y[];
 

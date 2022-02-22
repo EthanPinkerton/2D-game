@@ -22,7 +22,7 @@ import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GLCapabilities;
 
-public class renderer {
+public final class renderer {
 	public static renderer create(final window window_handle) {
 		GLCapabilities capabilities = GL.createCapabilities();
 		renderer result = new renderer();

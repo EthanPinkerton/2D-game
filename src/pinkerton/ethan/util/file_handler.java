@@ -22,7 +22,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ExecutionException;
 
 
-public class file_handler {
+public final class file_handler {
     private File handle;
 
     private boolean validate_read_mode() {

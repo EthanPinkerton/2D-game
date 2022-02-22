@@ -13,25 +13,11 @@
  * limitations under the License.
  * 
  */
-package pinkerton.ethan;
 
-import pinkerton.ethan.window.*;
-import pinkerton.ethan.graphics.*;
+package pinkerton.ethan.graphics;
 
-public final class main {
-	public static final String assets = "res";
-
-	public static void main(String[] argv) {
-		window   w = window.create("Hello World", 1080, 720, 0, 0, false);
-		renderer r = renderer.create(w);
-		shader   s = shader.create(String.format("%s/shaders/default.glsl.vert", assets), String.format("%s/shaders/default.glsl.frag", assets));
-
-
-		w.destroy();
-		s.destroy();
-
-
-		w.destroy();
-		s.destroy();
-	}
+public abstract interface buffer {
+	public abstract void bind();
+	public abstract void unbind();
+	public abstract void destroy();
 }

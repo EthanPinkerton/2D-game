@@ -20,7 +20,7 @@ import pinkerton.ethan.util.file_handler;
 import java.nio.IntBuffer;
 import org.lwjgl.opengl.GL20;
 
-public class shader {
+public final class shader {
     private int id;
 
     private static boolean validate_compiler(final int glue, final String path) {
@@ -90,12 +90,7 @@ public class shader {
     public void disable() {
         GL20.glUseProgram(0);
     }
-    private void destroy() {
+    public void destroy() {
         GL20.glDeleteProgram(this.id);
-    }
-    @Override
-    protected void finalize() throws Throwable {
-        super.finalize();
-        this.destroy();
     }
 }

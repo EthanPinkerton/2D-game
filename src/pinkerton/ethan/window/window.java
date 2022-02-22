@@ -18,8 +18,7 @@ package pinkerton.ethan.window;
 
 import org.lwjgl.glfw.GLFW;
 
-public class window {
-	/* As constructors cannot return a value. */
+public final class window {
 	public long handle;
 
 	public static window create(final String name, final int width, final int height, final int xpos, final int ypos, final boolean resizable) {
@@ -47,7 +46,7 @@ public class window {
 		GLFW.glfwShowWindow(result.handle);
 		return result;
 	}
-	private void destroy() {
+	public void destroy() {
 		GLFW.glfwDestroyWindow(this.handle);
 		GLFW.glfwTerminate();
 	}
