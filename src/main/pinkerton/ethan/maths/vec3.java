@@ -20,9 +20,9 @@ public final class vec3 {
 	public float x, y, z;
 
 	public vec3() {
-		this.x = 0.0f;
-		this.y = 0.0f;
-		this.z = 0.0f;
+		x = 0.0f;
+		y = 0.0f;
+		z = 0.0f;
 	}
 	public vec3(final float x, final float y, final float z) {
 		this.x = x;
@@ -35,43 +35,43 @@ public final class vec3 {
 		this.z = z;
 	}
 	public vec3 add(final vec3 vector) {
-		this.x += vector.x;
-		this.y += vector.y;
-		this.z += vector.z;
+		x += vector.x;
+		y += vector.y;
+		z += vector.z;
 		return this;
 	}
 	public vec3 subtract(final vec3 vector) {
-		this.x -= vector.x;
-		this.y -= vector.y;
-		this.z -= vector.z;
+		x -= vector.x;
+		y -= vector.y;
+		z -= vector.z;
 		return this;
 	}
 	public vec3 multiply(final vec3 vector) {
-		this.x *= vector.x;
-		this.y *= vector.y;
-		this.z *= vector.z;
+		x *= vector.x;
+		y *= vector.y;
+		z *= vector.z;
 		return this;
 	}
 	public vec3 multiply(final float scalar) {
-		this.x *= scalar;
-		this.y *= scalar;
-		this.z *= scalar;
+		x *= scalar;
+		y *= scalar;
+		z *= scalar;
 		return this;
 	}
 	public vec3 divide(final vec3 vector) {
-		this.x /= vector.x;
-		this.y /= vector.y;
-		this.z /= vector.z;
+		x /= vector.x;
+		y /= vector.y;
+		z /= vector.z;
 		return this;
 	}
 	public vec3 divide(final float scalar) {
-		this.x /= scalar;
-		this.y /= scalar;
-		this.z /= scalar;
+		x /= scalar;
+		y /= scalar;
+		z /= scalar;
 		return this;
 	}
 	public double magnitude() {
-		return Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
+		return Math.sqrt(x * x + y * y + z * z);
 	}
 	public static vec3 unit(final vec3 vector) {
 		final double divisor = vector.magnitude();
@@ -83,6 +83,6 @@ public final class vec3 {
 	}
 	@Override
 	public String toString() {
-		return String.format("(%f %f %f)", this.x, this.y, this.z);
+		return String.format("(%f %f %f)", x, y, z);
 	}
 }

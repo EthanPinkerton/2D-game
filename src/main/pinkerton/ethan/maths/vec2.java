@@ -20,55 +20,55 @@ public final class vec2 {
 	public float x, y;
 
 	public vec2() {
-		this.x = 0.0f;
-		this.y = 0.0f;
+		x = 0.0f;
+		y = 0.0f;
 	}
 	public vec2(final float x, final float y) {
 		this.x = x;
 		this.y = y;
 	}
 	public vec2 add(final vec2 vector) {
-		this.x += vector.x;
-		this.y += vector.y;
+		x += vector.x;
+		y += vector.y;
 		return this;
 	}
 	public vec2 subtract(final vec2 vector) {
-		this.x -= vector.x;
-		this.y -= vector.y;
+		x -= vector.x;
+		y -= vector.y;
 		return this;
 	}
 	public vec2 multiply(final vec2 vector) {
-		this.x *= vector.x;
-		this.y *= vector.y;
+		x *= vector.x;
+		y *= vector.y;
 		return this;
 	}
 	public vec2 multiply(final float scalar) {
-		this.x *= scalar;
-		this.y *= scalar;
+		x *= scalar;
+		y *= scalar;
 		return this;
 	}
 	public vec2 divide(final vec2 vector) {
-		this.x /= vector.x;
-		this.y /= vector.y;
+		x /= vector.x;
+		y /= vector.y;
 		return this;
 	}
 	public vec2 divide(final float scalar) {
-		this.x /= scalar;
-		this.y /= scalar;
+		x /= scalar;
+		y /= scalar;
 		return this;
 	}
 	public double magnitude() {
-		return Math.sqrt(this.x * this.x + this.y * this.y);
+		return Math.sqrt(x * x + y * y);
 	}
 	public static vec2 unit(final vec2 vector) {
 		final double divisor = vector.magnitude();
 		return new vec2(((float)(vector.x / divisor)), ((float)(vector.y / divisor)));
 	}
 	public double angle() {
-		return Math.toDegrees(Math.atan2(this.y, this.x));
+		return Math.toDegrees(Math.atan2(y, x));
 	}
 	@Override
 	public String toString() {
-		return String.format("(%f %f)", this.x, this.y);
+		return String.format("(%f %f)", x, y);
 	}
 }

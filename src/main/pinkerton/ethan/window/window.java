@@ -47,7 +47,7 @@ public final class window {
 		return result;
 	}
 	public void destroy() {
-		GLFW.glfwDestroyWindow(this.handle);
+		GLFW.glfwDestroyWindow(handle);
 		GLFW.glfwTerminate();
 	}
 }

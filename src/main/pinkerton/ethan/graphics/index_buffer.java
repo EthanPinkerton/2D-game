@@ -36,13 +36,13 @@ public final class index_buffer implements buffer {
 	}
 
 	public void bind() {
-		GL20.glBindBuffer(GL20.GL_ELEMENT_ARRAY_BUFFER, this.id);
+		GL20.glBindBuffer(GL20.GL_ELEMENT_ARRAY_BUFFER, id);
 	}
 	public void unbind() {
 		GL20.glBindBuffer(GL20.GL_ELEMENT_ARRAY_BUFFER, 0);
 	}
 	public void destroy() {
-		this.unbind();
-		GL20.glDeleteBuffers(this.id);
+		unbind();
+		GL20.glDeleteBuffers(id);
 	}
 }

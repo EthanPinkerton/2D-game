@@ -1,7 +1,7 @@
 import org.gradle.internal.os.OperatingSystem
 
-apply plugin: 'java'
-apply plugin: 'application'
+apply plugin: "java"
+apply plugin: "application"
 project.ext.lwjglVersion = "3.3.0"
 
 switch (OperatingSystem.current()) {
@@ -20,7 +20,12 @@ repositories {
 sourceSets {
 	main {
 		java {
-			srcDir 'src'
+			srcDir "src/main"
+		}
+	}
+	test {
+		java {
+			srcDir "src/test"
 		}
 	}
 }
@@ -36,6 +41,16 @@ dependencies {
 	runtimeOnly "org.lwjgl:lwjgl-glfw::$lwjglNatives"
 	runtimeOnly "org.lwjgl:lwjgl-opengl::$lwjglNatives"
 	runtimeOnly "org.lwjgl:lwjgl-opengles::$lwjglNatives"
+
+	testImplementation "org.junit.jupiter:junit-jupiter:5.8.2"
+	testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.8.2"
 }
-group = 'pinkerton.ethan'
-mainClassName = 'pinkerton.ethan.main'
+test {
+	useJUnitPlatform()
+	beforeTest { descriptor ->
+		logger.lifecycle("Running test: ${descriptor}")
+	}
+}
+
+group = "pinkerton.ethan"
+mainClassName = "pinkerton.ethan.main"

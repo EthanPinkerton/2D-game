@@ -19,6 +19,8 @@ import pinkerton.ethan.window.*;
 import pinkerton.ethan.graphics.*;
 import pinkerton.ethan.maths.*;
 
+import java.util.Arrays;
+
 public final class main {
 	public static final String assets = "res";
 
@@ -27,9 +29,10 @@ public final class main {
 		renderer r = renderer.create(w);
 		shader   s = shader.create(String.format("%s/shaders/default.glsl.vert", assets), String.format("%s/shaders/default.glsl.frag", assets));
 
-
-		vec2 vector = new vec2(4.0f, 5.0f);
-		System.out.printf("Unit vector, %s, %s, angle %f\n", vector.toString(), vec2.unit(vector).toString(), vector.angle());
+		mat4x4 m1 = new mat4x4(3.0f);
+		mat4x4 m2 = new mat4x4();
+		Arrays.fill(m2.data, 3.0f);
+		m1 = m1.multiply(m2);
 
 		w.destroy();
 		s.destroy();

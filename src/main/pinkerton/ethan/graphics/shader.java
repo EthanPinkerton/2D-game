@@ -80,17 +80,20 @@ public final class shader {
         }
         /* Delete the glue. */
         for (int g : glue) {
-            GL20.glDeleteShader(g);
+			GL20.glDetachShader(result.id, g);
         }
+		for (int g : glue) {
+			GL20.glDeleteShader(g);
+		}
         return result;
     }
     public void enable() {
-        GL20.glUseProgram(this.id);
+        GL20.glUseProgram(id);
     }
     public void disable() {
         GL20.glUseProgram(0);
     }
     public void destroy() {
-        GL20.glDeleteProgram(this.id);
+        GL20.glDeleteProgram(id);
     }
 }

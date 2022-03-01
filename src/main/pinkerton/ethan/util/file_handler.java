@@ -27,18 +27,18 @@ public final class file_handler {
 
     private boolean validate_read_mode() {
         /* Validates that reading the file is valid, it exists and can be read from. */
-        return this.handle.canRead() && this.handle.exists();
+        return handle.canRead() && handle.exists();
     }
     private boolean validate_write_mode() {
-        if (!this.handle.exists()) {
+        if (!handle.exists()) {
             try {
-                this.handle.createNewFile();
+                handle.createNewFile();
             } catch (Exception e) {
                 System.out.printf("error: cannot create %s for writing, exception thrown, %s.\n");
                 return false;
             }
         }
-        return this.handle.canWrite();
+        return handle.canWrite();
     }
 
     public static file_handler create(final String path, final boolean read_mode) {
@@ -51,12 +51,12 @@ public final class file_handler {
         FileInputStream input_stream;
         byte buffer[];
         try {
-            input_stream = new FileInputStream(this.handle);
-            buffer = new byte[((int)this.handle.length())];
+            input_stream = new FileInputStream(handle);
+            buffer = new byte[((int)handle.length())];
             input_stream.read(buffer);
             input_stream.close();
         } catch (Exception e) {
-            System.out.printf("error: failed to read %s, exception raised, %s.\n", this.handle.getName(), e.toString());
+            System.out.printf("error: failed to read %s, exception raised, %s.\n", handle.getName(), e.toString());
             return null;
         }
         /* Cast our bytes to a string, using ascii. */
