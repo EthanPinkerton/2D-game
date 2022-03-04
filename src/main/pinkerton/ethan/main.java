@@ -29,11 +29,6 @@ public final class main {
 		renderer r = renderer.create(w);
 		shader   s = shader.create(String.format("%s/shaders/default.glsl.vert", assets), String.format("%s/shaders/default.glsl.frag", assets));
 
-		mat4x4 m1 = new mat4x4(3.0f);
-		mat4x4 m2 = new mat4x4();
-		Arrays.fill(m2.data, 3.0f);
-		m1 = m1.multiply(m2);
-
 		w.destroy();
 		s.destroy();
 	}

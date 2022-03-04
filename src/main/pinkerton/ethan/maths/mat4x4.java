@@ -52,9 +52,7 @@ public final class mat4x4 {
 		 * Really hope java does some form of simd acceleration, or uses the dot product instruction.
 		 * May have to use a externally compiled C library to get any decent performance.
 		 */
-		mat4x4 m1 = this;
 		float res[] = new float[16];
-
 		/* First row of the matrix. */
 		res[0]  = (data[0] * m2.data[0]) + (data[1] * m2.data[4]) + (data[2] * m2.data[8]) + (data[3] * m2.data[12]);
 		res[1]  = (data[0] * m2.data[1]) + (data[1] * m2.data[5]) + (data[2] * m2.data[9]) + (data[3] * m2.data[13]);
