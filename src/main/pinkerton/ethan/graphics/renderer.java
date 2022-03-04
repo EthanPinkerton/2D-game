@@ -31,8 +31,8 @@ public final class renderer {
 		 * This renderer uses functions present in the versions 2 and lower.
 		 * Validate that the GPU supports these features.
 		 */
-		if (!capabilities.OpenGL20) {
-			System.out.printf("error: video card does not support OpenGL version 2 or greater, required features not present.\n");
+		if (!capabilities.OpenGL30) {
+			System.out.printf("error: video card does not support OpenGL version 3 or greater, required features not present.\n");
 			return null;
 		}
 
