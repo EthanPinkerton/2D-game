@@ -19,8 +19,8 @@ package pinkerton.ethan.util;
 import java.io.File;
 import java.io.FileInputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.concurrent.ExecutionException;
-
+import java.nio.ByteBuffer;
+import org.lwjgl.stb.STBImage;
 
 public final class file_handler {
     private File handle;
@@ -34,7 +34,7 @@ public final class file_handler {
             try {
                 handle.createNewFile();
             } catch (Exception e) {
-                System.out.printf("error: cannot create %s for writing, exception thrown, %s.\n");
+                System.err.printf("error: cannot create %s for writing, exception thrown, %s.\n");
                 return false;
             }
         }
@@ -56,15 +56,16 @@ public final class file_handler {
             input_stream.read(buffer);
             input_stream.close();
         } catch (Exception e) {
-            System.out.printf("error: failed to read %s, exception raised, %s.\n", handle.getName(), e.toString());
+            System.err.printf("error: failed to read %s, exception raised, %s.\n", handle.getName(), e.toString());
             return null;
         }
         /* Cast our bytes to a string, using ascii. */
         try {
             return new String(buffer, StandardCharsets.US_ASCII);
         } catch (Exception e) {
-            System.out.printf("error: unable to cast read bytes from %s to US-ASCII, check file encoding.");
+            System.err.printf("error: unable to cast read bytes from %s to US-ASCII, check file encoding.");
             return null;
         }
     }
+
 }

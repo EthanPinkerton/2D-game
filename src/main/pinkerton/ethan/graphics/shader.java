@@ -44,11 +44,11 @@ public final class shader {
         String source;
 
         if ((file_handler = pinkerton.ethan.util.file_handler.create(path, true)) == null) {
-            System.out.printf("error: cannot read shader %s, invalid path or invalid permissions.\n", path);
+            System.err.printf("error: cannot read shader %s, invalid path or invalid permissions.\n", path);
             return -1;
         }
         if ((source = file_handler.read()) == null) {
-            System.out.printf("error: failed to read shader %s, no bytes received.\n", path);
+            System.err.printf("error: failed to read shader %s, no bytes received.\n", path);
             return -1;
         }
         /* Create the shader and attach the source. */

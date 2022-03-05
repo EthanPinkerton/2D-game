@@ -26,7 +26,7 @@ public final class window {
 
 		/* Initialise glfw. */
 		if (!GLFW.glfwInit()) {
-			System.out.printf("error: unable to initialise glfw, failed to create window.\n");
+			System.err.printf("error: unable to initialise glfw, failed to create window.\n");
 			return null;
 		}
 
@@ -38,7 +38,7 @@ public final class window {
 		GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, (resizable == true) ? GLFW.GLFW_TRUE : GLFW.GLFW_FALSE);
 		result.handle = GLFW.glfwCreateWindow(width, height, name, 0l, 0l);
 		if (result.handle == 0) {
-			System.out.printf("error: unable to create glfw window.\n");
+			System.err.printf("error: unable to create glfw window.\n");
 			return null;
 		}
 		GLFW.glfwMakeContextCurrent(result.handle);

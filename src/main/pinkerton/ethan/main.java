@@ -18,6 +18,7 @@ package pinkerton.ethan;
 import pinkerton.ethan.window.*;
 import pinkerton.ethan.graphics.*;
 import pinkerton.ethan.maths.*;
+import pinkerton.ethan.util.*;
 
 import java.util.Arrays;
 
@@ -28,6 +29,7 @@ public final class main {
 		window   w = window.create("Hello World", 1080, 720, 0, 0, false);
 		renderer r = renderer.create(w);
 		shader   s = shader.create(String.format("%s/shaders/default.glsl.vert", assets), String.format("%s/shaders/default.glsl.frag", assets));
+		texture  t = texture.create(String.format("%s/textures/mosic.jpeg", assets));
 
 		w.destroy();
 		s.destroy();

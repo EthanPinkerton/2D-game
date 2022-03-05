@@ -32,7 +32,7 @@ public final class renderer {
 		 * Validate that the GPU supports these features.
 		 */
 		if (!capabilities.OpenGL30) {
-			System.out.printf("error: video card does not support OpenGL version 3 or greater, required features not present.\n");
+			System.err.printf("error: video card does not support OpenGL version 3 or greater, required features not present.\n");
 			return null;
 		}
 
@@ -44,6 +44,4 @@ public final class renderer {
 		System.out.printf("info:  GL version %s, %s.\n", GL20.glGetString(GL20.GL_VERSION), GL20.glGetString(GL20.GL_RENDERER));
 		return result;
 	}
-
-
 }
