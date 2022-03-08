@@ -44,4 +44,8 @@ public final class renderer {
 		System.out.printf("info:  GL version %s, %s.\n", GL20.glGetString(GL20.GL_VERSION), GL20.glGetString(GL20.GL_RENDERER));
 		return result;
 	}
+	public void clear() {
+		GL20.glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+		GL20.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+	}
 }

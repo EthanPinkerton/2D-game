@@ -87,10 +87,10 @@ public final class shader {
 		}
         return result;
     }
-    public void enable() {
+    public void bind() {
         GL20.glUseProgram(id);
     }
-    public void disable() {
+    public void unbind() {
         GL20.glUseProgram(0);
     }
     public void destroy() {

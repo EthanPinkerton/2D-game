@@ -16,21 +16,28 @@
 
 package pinkerton.ethan.graphics;
 
+import java.nio.FloatBuffer;
 import org.lwjgl.opengl.GL20;
+import org.lwjgl.system.MemoryUtil;
 
 public final class vertex_buffer implements buffer {
 	public int id;
 
-
-	public static vertex_buffer create(final int data[], final boolean is_static) {
+	public static vertex_buffer create(final float data[], final boolean is_static) {
 		vertex_buffer result = new vertex_buffer();
-
 		result.id = GL20.glGenBuffers();
 		/* Bind and upload. */
 		result.bind();
-		GL20.glBufferData(GL20.GL_ARRAY_BUFFER, data, (is_static) ? GL20.GL_STATIC_DRAW : GL20.GL_DYNAMIC_DRAW);
-	
-		/* Undbind and check for errors. */
+
+		/* 
+		 * OpenGL and java is like a forced marriage, kinda works but a bit jank.
+		 * We need to store our floating point data into an FloatBuffer, this is probaly due to the way that C expects data compared to java.
+		 */
+		FloatBuffer upload_data = MemoryUtil.memAllocFloat(data.length);
+		upload_data.put(data).flip();
+
+		GL20.glBufferData(GL20.GL_ARRAY_BUFFER, upload_data, (is_static) ? GL20.GL_STATIC_DRAW : GL20.GL_DYNAMIC_DRAW);
+		MemoryUtil.memFree(upload_data);
 		return (GL20.glGetError() == GL20.GL_NO_ERROR) ? result : null;
 	}
 	public void bind() {

@@ -20,13 +20,6 @@ import org.lwjgl.opengl.GL30;
 import java.util.Queue;
 import java.util.LinkedList;
 
-/* Assume that the data is likely to be normalised. */
-final class vertex_array_attribute {
-	public int stride;
-	public int type;
-	public int count;
-}
-
 
 public final class vertex_array implements buffer {
 	public int id;
@@ -65,7 +58,6 @@ public final class vertex_array implements buffer {
 			accumilative_offset += a.stride;
 			++index;
 		}
-		bind();
 	}
 	public void unbind() {
 		GL30.glBindVertexArray(0);

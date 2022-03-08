@@ -17,10 +17,21 @@
 package pinkerton.ethan.window;
 
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWVidMode;
 
 public final class window {
 	public long handle;
 
+	public static window create(final String name, final int width, final int height, final boolean resizable) {
+		/* Initialise glfw. */
+		if (!GLFW.glfwInit()) {
+			System.err.printf("error: unable to initialise glfw, cannot create a window.\n");
+			return null;
+		}
+		/* Use the monitor dimensions and the desired width and height to autocentre the window. */
+		GLFWVidMode mode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
+		return window.create(name, width, height, (mode.width() / 2) - (width / 2), (mode.height() / 2) - (height / 2), resizable);
+	}
 	public static window create(final String name, final int width, final int height, final int xpos, final int ypos, final boolean resizable) {
 		window result = new window();
 
@@ -36,6 +47,7 @@ public final class window {
 		GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_PROFILE, GLFW.GLFW_OPENGL_CORE_PROFILE);
 		GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_FORWARD_COMPAT, GLFW.GLFW_TRUE);
 		GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, (resizable == true) ? GLFW.GLFW_TRUE : GLFW.GLFW_FALSE);
+
 		result.handle = GLFW.glfwCreateWindow(width, height, name, 0l, 0l);
 		if (result.handle == 0) {
 			System.err.printf("error: unable to create glfw window.\n");
