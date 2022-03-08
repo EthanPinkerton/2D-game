@@ -17,11 +17,16 @@
 package pinkerton.ethan.graphics;
 
 import pinkerton.ethan.util.file_handler;
-import java.nio.IntBuffer;
 import org.lwjgl.opengl.GL20;
+import java.util.HashMap;
 
 public final class shader {
     private int id;
+	public HashMap<String, Integer> uniform_cache;
+	
+	public shader() {
+		uniform_cache = new HashMap<String, Integer>();
+	}
 
     private static boolean validate_compiler(final int glue, final String path) {
 		if (GL20.glGetShaderi(glue, GL20.GL_COMPILE_STATUS) == 0) {
@@ -87,6 +92,25 @@ public final class shader {
 		}
         return result;
     }
+	public int get_uniform(final String name) {
+		/* Search the uniform cache for the target. */
+		if (uniform_cache.get(name) != null) {
+			return Integer.valueOf(uniform_cache.get(name));
+		}
+
+		/* Get from the shader program, this will is slower than storing them in cache. */
+		int location = GL20.glGetUniformLocation(id, name);
+		
+		/* Validate that the uniform could be found. */
+		if (GL20.glGetError() != GL20.GL_NO_ERROR) {
+			System.err.printf("error: could not find uniform %s in shader program.\n");
+			return -1;
+		} 
+
+		/* Store the name and location within the uniform cache, return the location. */
+		uniform_cache.put(name, location);
+		return location;
+	}
     public void bind() {
         GL20.glUseProgram(id);
     }

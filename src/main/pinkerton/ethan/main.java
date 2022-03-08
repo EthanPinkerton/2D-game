@@ -48,11 +48,16 @@ public final class main {
 
 		vbo.unbind();
 		vao.unbind();
+		s.bind();
+
+		int location = s.get_uniform("in_color");
+		if (location != -1) {
+			GL30.glUniform4f(location, 1.0f, 0.0f, 0.5f, 1.0f);
+		}
 
 		while (!GLFW.glfwWindowShouldClose(w.handle)) {
 			r.clear();
 
-			s.bind();
 			vao.bind();
 			GL30.glEnableVertexAttribArray(0);
 
@@ -60,6 +65,8 @@ public final class main {
 
 			GLFW.glfwSwapBuffers(w.handle);
 			GLFW.glfwPollEvents();
+
+			GL30.glUniform4f(location, (float)Math.sin(GLFW.glfwGetTime()), 0.3f, 0.3f, 1.0f);
 		}
 		vao.unbind();
 		vao.destroy();

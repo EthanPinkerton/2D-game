@@ -38,7 +38,7 @@ public final class renderer {
 
 		/* Set the viewport based on the window's dimensions. */
 		dimensions dimensions = new dimensions();
-		dimensions.position(window_handle);
+		dimensions.size(window_handle);
 		GL20.glViewport(0, 0, dimensions.x[0], dimensions.y[0]);
 
 		System.out.printf("info:  GL version %s, %s.\n", GL20.glGetString(GL20.GL_VERSION), GL20.glGetString(GL20.GL_RENDERER));
