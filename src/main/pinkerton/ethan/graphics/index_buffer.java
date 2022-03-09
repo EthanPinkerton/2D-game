@@ -17,6 +17,8 @@
 package pinkerton.ethan.graphics;
 
 import org.lwjgl.opengl.GL20;
+import org.lwjgl.system.MemoryUtil;
+import java.nio.IntBuffer;
 
 public final class index_buffer implements buffer {
 	private int id;
@@ -27,9 +29,13 @@ public final class index_buffer implements buffer {
 		/* Create and bind the buffer data. */
 		result.id = GL20.glGenBuffers();
 		result.bind();
+		
+		IntBuffer upload_data = MemoryUtil.memAllocInt(data.length);
+		upload_data.put(data).flip();
 
-		/* Upload the data. */
-		GL20.glBufferData(GL20.GL_ELEMENT_ARRAY_BUFFER, data, (is_static) ? GL20.GL_STATIC_DRAW : GL20.GL_DYNAMIC_DRAW);
+		GL20.glBufferData(GL20.GL_ELEMENT_ARRAY_BUFFER, upload_data, (is_static) ? GL20.GL_STATIC_DRAW : GL20.GL_DYNAMIC_DRAW);
+		MemoryUtil.memFree(upload_data);
+
 		/* Unbind. */
 		result.unbind();
 		return (GL20.glGetError() == GL20.GL_NO_ERROR) ? result : null;

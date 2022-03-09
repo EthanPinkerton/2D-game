@@ -38,10 +38,10 @@ public final class main {
 		}
 
 
-		final float verticies[] = new float[]{ -0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f, 0.0f, 0.5f, 0.0f };
+		final float vertices[] = { 0.5f,  0.5f, 0.0f, 0.5f, -0.5f, 0.0f, -0.5f, -0.5f, 0.0f, -0.5f,  0.5f, 0.0f };
 		vertex_array vao = vertex_array.create();
 		vao.bind();
-		vertex_buffer vbo = vertex_buffer.create(verticies, true);
+		vertex_buffer vbo = vertex_buffer.create(vertices, true);
 		vbo.bind();
 		GL30.glVertexAttribPointer(0, 3, GL30.GL_FLOAT, true, 0, 0);
 		GL30.glEnableVertexAttribArray(0);
@@ -49,6 +49,9 @@ public final class main {
 		vbo.unbind();
 		vao.unbind();
 		s.bind();
+
+		final int indexes[] = { 0, 1, 2, 2, 3, 0 };
+		index_buffer ibo = index_buffer.create(indexes, true);
 
 		int location = s.get_uniform("in_color");
 		if (location != -1) {
@@ -59,9 +62,10 @@ public final class main {
 			r.clear();
 
 			vao.bind();
+			ibo.bind();
 			GL30.glEnableVertexAttribArray(0);
 
-			GL30.glDrawArrays(GL30.GL_TRIANGLES, 0, 3);
+			GL30.glDrawElements(GL30.GL_TRIANGLES, 6, GL30.GL_UNSIGNED_INT, 0);
 
 			GLFW.glfwSwapBuffers(w.handle);
 			GLFW.glfwPollEvents();
@@ -69,8 +73,11 @@ public final class main {
 			GL30.glUniform4f(location, (float)Math.sin(GLFW.glfwGetTime()), 0.3f, 0.3f, 1.0f);
 		}
 		vao.unbind();
+		ibo.unbind();
+
 		vao.destroy();
 		vbo.destroy();
+		ibo.destroy();
 		w.destroy();
 		s.destroy();
 	}
