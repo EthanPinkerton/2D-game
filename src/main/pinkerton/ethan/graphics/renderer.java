@@ -16,6 +16,7 @@
 
 package pinkerton.ethan.graphics;
 
+import org.lwjgl.opengl.GL30;
 import pinkerton.ethan.window.window;
 import pinkerton.ethan.window.dimensions;
 import org.lwjgl.opengl.GL;
@@ -48,4 +49,12 @@ public final class renderer {
 		GL20.glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 		GL20.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 	}
+	public void draw(vertex_array vao, vertex_buffer vbo, index_buffer ibo){
+		vao.bind();
+		vbo.bind();
+		vao.enable();
+		ibo.bind();
+		GL30.glDrawElements(GL30.GL_TRIANGLES, 6, GL30.GL_UNSIGNED_INT, 0);
+	}
+
 }

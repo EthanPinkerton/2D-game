@@ -18,6 +18,15 @@ package pinkerton.ethan.window;
 
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWVidMode;
+import org.lwjgl.glfw.GLFWWindowSizeCallbackI;
+import org.lwjgl.opengl.GL20;
+
+class resize_callback implements GLFWWindowSizeCallbackI {
+	@Override
+	public void invoke(final long window, final int width, final int height){
+		GL20.glViewport(0,0,width,height);
+	}
+}
 
 public final class window {
 	public long handle;
@@ -53,6 +62,8 @@ public final class window {
 			System.err.printf("error: unable to create glfw window.\n");
 			return null;
 		}
+
+		GLFW.glfwSetWindowSizeCallback(result.handle, new resize_callback());
 		GLFW.glfwMakeContextCurrent(result.handle);
 		GLFW.glfwSetWindowPos(result.handle, xpos, ypos);
 		GLFW.glfwShowWindow(result.handle);
