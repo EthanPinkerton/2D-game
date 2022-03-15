@@ -44,28 +44,32 @@ public final class texture {
 		}
 
 		/* Translate the channel count to the integer values used by opengl. */
-		final int format = GL20.GL_RGB + (data.channels - 3);
+		final int format = GL20.GL_RGB;
 
-		/* Bind and upload our data to the texutre handle. */
+		/* Bind the texture. */
 		result.bind();
-		GL20.glTexImage2D(GL20.GL_TEXTURE_2D, 0, format, data.width, data.height, 0, format, GL20.GL_UNSIGNED_BYTE, data.data);	
-	
+
+		/* Set some features of the texture. */
+		GL20.glTexParameteri(GL20.GL_TEXTURE_2D, GL20.GL_TEXTURE_WRAP_S, GL20.GL_CLAMP_TO_EDGE);
+		GL20.glTexParameteri(GL20.GL_TEXTURE_2D, GL20.GL_TEXTURE_WRAP_T, GL20.GL_CLAMP_TO_EDGE);
+		GL20.glTexParameteri(GL20.GL_TEXTURE_2D, GL20.GL_TEXTURE_MIN_FILTER, GL20.GL_LINEAR);
+		GL20.glTexParameteri(GL20.GL_TEXTURE_2D, GL20.GL_TEXTURE_MAG_FILTER, GL20.GL_LINEAR);
+		GL20.glTexImage2D(GL20.GL_TEXTURE_2D, 0, format, data.width, data.height, 0, format, GL20.GL_UNSIGNED_BYTE, data.data);
 		result.unbind();
-		return result;
+		return (GL20.glGetError() == GL20.GL_NO_ERROR) ? result : null;
 	}
 	public void bind(final int slot_offset) {
 		/* Assumes that the slot boundaries have been checked by the caller, slot should be automatically assigned. */
 		GL20.glActiveTexture(GL20.GL_TEXTURE0 + slot_offset);
 		GL20.glBindTexture(GL20.GL_TEXTURE_2D, id);
-
 	}
 	public void bind() {
-		GL20.glBindTexture(GL20.GL_TEXTURE_2D, id);
+		bind(0);
 	}
 	public void unbind() {
 		GL20.glBindTexture(GL20.GL_TEXTURE_2D, 0);
 	}
-	public void delete() {
+	public void destroy() {
 		GL20.glDeleteTextures(id);
 	}
 }
