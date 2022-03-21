@@ -23,12 +23,12 @@ import java.util.LinkedList;
 
 public final class vertex_array implements buffer {
 	public int id;
-	public int accumilation;
+	public int accumulation;
 	public Queue<vertex_array_attribute> attributes;
 
 	public vertex_array() {
 		attributes = new LinkedList<vertex_array_attribute>();
-		accumilation = 0;
+		accumulation = 0;
 	}
 
 	public static vertex_array create() {
@@ -37,7 +37,7 @@ public final class vertex_array implements buffer {
 		return result;
 	}
 	public boolean push(final vertex_array_attribute insertion) {
-		accumilation += insertion.stride;
+		accumulation += insertion.count * 4;
 		return attributes.add(insertion);
 	}
 	public void pop() {
@@ -47,15 +47,11 @@ public final class vertex_array implements buffer {
 		GL30.glBindVertexArray(id);
 	}
 	public void enable() {
-		/* As each data is packed, by using the last ones offset you can calculate the next ones offset aswell, this starts at 0. */
-		long accumilative_offset = 0;
+		bind();
 		int index = 0;
-
-		/* Bind and enables all the vertex attribute pointers. */
 		for (vertex_array_attribute a : attributes) {
-			GL30.glVertexAttribPointer(index, a.count, a.type, false, accumilation, accumilative_offset);
+			GL30.glVertexAttribPointer(index, a.count, GL30.GL_FLOAT, false, accumulation, a.start);
 			GL30.glEnableVertexAttribArray(index);
-			accumilative_offset += a.stride;
 			++index;
 		}
 	}

@@ -20,7 +20,6 @@ import pinkerton.ethan.graphics.*;
 import pinkerton.ethan.maths.*;
 import pinkerton.ethan.util.*;
 import java.util.Arrays;
-
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL30;
 
@@ -44,12 +43,9 @@ public final class main {
 		vertex_array vao = vertex_array.create();
 		vao.bind();
 		vertex_buffer vbo = vertex_buffer.create(vertices, true);
-		vbo.bind();
-		GL30.glVertexAttribPointer(0, 3, GL30.GL_FLOAT, false, 20, 0l);
-		GL30.glEnableVertexAttribArray(0);
-		GL30.glVertexAttribPointer(1, 2, GL30.GL_FLOAT, false, 20, 12l);
-		GL30.glEnableVertexAttribArray(1);
-
+		vao.push(new vertex_array_attribute(3, 0));
+		vao.push(new vertex_array_attribute(2, 12));
+		vao.enable();
 		s.bind();
 
 		final int indexes[] = { 0, 1, 2, 2, 3, 0 };
@@ -63,13 +59,11 @@ public final class main {
 
 		while (!GLFW.glfwWindowShouldClose(w.handle)) {
 			r.clear();
-			vao.bind();
+			vao.enable();
 			vbo.bind();
 			ibo.bind();
 			t.bind();
 
-			GL30.glEnableVertexAttribArray(0);
-			GL30.glEnableVertexAttribArray(1);
 
 			GL30.glDrawElements(GL30.GL_TRIANGLES, 6, GL30.GL_UNSIGNED_INT, 0);
 
