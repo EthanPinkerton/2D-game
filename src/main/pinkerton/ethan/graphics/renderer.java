@@ -67,12 +67,17 @@ public final class renderer {
 		GL20.glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 		GL20.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 	}
-	public void draw(vertex_array vao, vertex_buffer vbo, index_buffer ibo){
+	public void draw(vertex_array vao, vertex_buffer vbo, index_buffer ibo, shader shader) {
+		shader.bind();
 		vao.bind();
 		vbo.bind();
 		vao.enable();
 		ibo.bind();
 		GL20.glDrawElements(GL20.GL_TRIANGLES, 6, GL20.GL_UNSIGNED_INT, 0);
+		ibo.unbind();
+		shader.unbind();
+		vbo.unbind();
+		vao.disable();
+		vao.unbind();
 	}
-
 }

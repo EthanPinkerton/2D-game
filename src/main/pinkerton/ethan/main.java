@@ -15,11 +15,9 @@
  */
 package pinkerton.ethan;
 
+import glm.mat._4.Mat4;
 import pinkerton.ethan.window.*;
 import pinkerton.ethan.graphics.*;
-import pinkerton.ethan.maths.*;
-import pinkerton.ethan.util.*;
-import java.util.Arrays;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL30;
 
@@ -53,31 +51,31 @@ public final class main {
 
 		int location = s.get_uniform("in_color");
 		if (location != -1) {
-			GL30.glUniform4f(location, 1.0f, 0.0f, 0.5f, 1.0f);
+			GL30.glUniform4f(location, 1.0f, 0.0f, 0.0f, 1.0f);
 		}
-
 
 		while (!GLFW.glfwWindowShouldClose(w.handle)) {
 			r.clear();
-			vao.enable();
-			vbo.bind();
-			ibo.bind();
+
+
 			t.bind();
-
-
-			GL30.glDrawElements(GL30.GL_TRIANGLES, 6, GL30.GL_UNSIGNED_INT, 0);
+			r.draw(vao, vbo, ibo, s);
+			t.unbind();
 
 			GLFW.glfwSwapBuffers(w.handle);
 			GLFW.glfwPollEvents();
-
-			GL30.glUniform4f(location, (float)Math.sin(GLFW.glfwGetTime()), 0.3f, 0.3f, 1.0f);
 
 			if (GLFW.glfwGetKey(w.handle, GLFW.GLFW_KEY_W) == GLFW.GLFW_PRESS) {
 				GL30.glPolygonMode(GL30.GL_FRONT_AND_BACK, GL30.GL_LINE);
 			} else if (GLFW.glfwGetKey(w.handle, GLFW.GLFW_KEY_U) == GLFW.GLFW_PRESS) {
 				GL30.glPolygonMode(GL30.GL_FRONT_AND_BACK, GL30.GL_FILL);
+			} else if (GLFW.glfwGetKey(w.handle, GLFW.GLFW_KEY_C) == GLFW.GLFW_PRESS) {
+				s.bind();
+				GL30.glUniform4f(location, 1.0f, (float)Math.sin(GLFW.glfwGetTime()), 0.3f, 1.0f);
+				s.unbind();
 			}
 		}
+		vao.disable();
 		vao.unbind();
 		ibo.unbind();
 

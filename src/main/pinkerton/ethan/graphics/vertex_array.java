@@ -32,28 +32,36 @@ public final class vertex_array implements buffer {
 	}
 
 	public static vertex_array create() {
-		vertex_array result = new vertex_array();	
+		vertex_array result = new vertex_array();
 		result.id = GL30.glGenVertexArrays();
 		return result;
 	}
+
 	public boolean push(final vertex_array_attribute insertion) {
 		accumulation += insertion.count * 4;
 		return attributes.add(insertion);
 	}
+
 	public void pop() {
 		attributes.remove();
 	}
+
 	public void bind() {
 		GL30.glBindVertexArray(id);
 	}
+
 	public void enable() {
-		bind();
 		int index = 0;
 		for (vertex_array_attribute a : attributes) {
 			GL30.glVertexAttribPointer(index, a.count, GL30.GL_FLOAT, false, accumulation, a.start);
 			GL30.glEnableVertexAttribArray(index);
 			++index;
 		}
+	}
+
+	public void disable() {
+		for (int i = 0; i < attributes.stream().count(); ++i)
+			GL30.glDisableVertexAttribArray(i);
 	}
 	public void unbind() {
 		GL30.glBindVertexArray(0);
