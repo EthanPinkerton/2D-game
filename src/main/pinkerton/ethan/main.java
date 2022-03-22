@@ -15,9 +15,11 @@
  */
 package pinkerton.ethan;
 
-import glm.mat._4.Mat4;
+import org.joml.Vector3f;
+import org.lwjgl.BufferUtils;
 import pinkerton.ethan.window.*;
 import pinkerton.ethan.graphics.*;
+import pinkerton.ethan.scene.*;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL30;
 
@@ -27,8 +29,9 @@ public final class main {
 	public static void main(String[] argv) {
 		window   w = window.create("Hello World", 1080, 720, false);
 		renderer r = renderer.create(w);
-		shader   s = shader.create(String.format("%s/shaders/texture.glsl.vert", assets), String.format("%s/shaders/texture.glsl.frag", assets));
+		shader   s = shader.create(String.format("%s/shaders/texture-projected.glsl.vert", assets), String.format("%s/shaders/texture-projected.glsl.frag", assets));
 		texture  t = texture.create(String.format("%s/textures/mosaic.jpeg", assets));
+		orthographic_camera o = new orthographic_camera(new Vector3f(0f, 0f, 0f), 0f, -1f, 1f, -1f, 1f);
 
 		if (s == null || w == null || r == null) {
 			return;
@@ -49,15 +52,15 @@ public final class main {
 		final int indexes[] = { 0, 1, 2, 2, 3, 0 };
 		index_buffer ibo = index_buffer.create(indexes, true);
 
-		int location = s.get_uniform("in_color");
-		if (location != -1) {
-			GL30.glUniform4f(location, 1.0f, 0.0f, 0.0f, 1.0f);
+		int color_location = s.get_uniform("in_color");
+		if (color_location != -1) {
+			GL30.glUniform4f(color_location, 1.0f, 0.0f, 0.0f, 1.0f);
 		}
+
+		s.upload_mat4f(o.view_projection, "projection");
 
 		while (!GLFW.glfwWindowShouldClose(w.handle)) {
 			r.clear();
-
-
 			t.bind();
 			r.draw(vao, vbo, ibo, s);
 			t.unbind();
@@ -69,11 +72,14 @@ public final class main {
 				GL30.glPolygonMode(GL30.GL_FRONT_AND_BACK, GL30.GL_LINE);
 			} else if (GLFW.glfwGetKey(w.handle, GLFW.GLFW_KEY_U) == GLFW.GLFW_PRESS) {
 				GL30.glPolygonMode(GL30.GL_FRONT_AND_BACK, GL30.GL_FILL);
-			} else if (GLFW.glfwGetKey(w.handle, GLFW.GLFW_KEY_C) == GLFW.GLFW_PRESS) {
-				s.bind();
-				GL30.glUniform4f(location, 1.0f, (float)Math.sin(GLFW.glfwGetTime()), 0.3f, 1.0f);
-				s.unbind();
 			}
+
+			s.bind();
+			float angle = ((float)GLFW.glfwGetTime()) % 360;
+			o.set_rotation(angle);
+			s.upload_mat4f(o.view_projection, "projection");
+			GL30.glUniform4f(color_location, (float)(Math.sin(GLFW.glfwGetTime())), 0.3f, 1.0f, 1.0f);
+			s.unbind();
 		}
 		vao.disable();
 		vao.unbind();

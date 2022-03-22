@@ -16,8 +16,12 @@
 
 package pinkerton.ethan.graphics;
 
+import org.joml.Matrix4f;
+import org.lwjgl.BufferUtils;
 import pinkerton.ethan.util.file_handler;
 import org.lwjgl.opengl.GL20;
+
+import java.nio.FloatBuffer;
 import java.util.HashMap;
 
 public final class shader {
@@ -111,6 +115,15 @@ public final class shader {
 		uniform_cache.put(name, location);
 		return location;
 	}
+    public int upload_mat4f(final Matrix4f matrix, final String name) {
+        int location;
+        if ((location = get_uniform(name)) < 0)
+            return -1;
+        FloatBuffer buffer = BufferUtils.createFloatBuffer(16);
+        matrix.get(buffer);
+        GL20.glUniformMatrix4fv(location, false, buffer);
+        return 0;
+    }
     public void bind() {
         GL20.glUseProgram(id);
     }

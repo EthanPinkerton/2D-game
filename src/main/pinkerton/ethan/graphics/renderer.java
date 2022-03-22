@@ -51,6 +51,7 @@ public final class renderer {
 		dimensions dimensions = new dimensions();
 		dimensions.size(window_handle);
 		GL20.glViewport(0, 0, dimensions.x[0], dimensions.y[0]);
+		GL20.glEnable(GL20.GL_DEPTH_TEST);
 
 		System.out.printf("info:  GL version %s, %s.\n", GL20.glGetString(GL20.GL_VERSION), GL20.glGetString(GL20.GL_RENDERER));
 		result.handle_debug(capabilities);
