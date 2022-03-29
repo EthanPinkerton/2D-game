@@ -16,12 +16,7 @@
 
 package pinkerton.ethan.graphics;
 
-import org.lwjgl.opengl.GLCapabilities;
-import org.lwjgl.opengl.GL20;
-import org.lwjgl.opengl.GL;
-import org.lwjgl.opengl.KHRDebug;
-import org.lwjgl.opengl.GLDebugMessageCallback;
-import org.lwjgl.opengl.GLDebugMessageCallbackI;
+import org.lwjgl.opengl.*;
 import pinkerton.ethan.window.window;
 import pinkerton.ethan.window.dimensions;
 
@@ -52,6 +47,7 @@ public final class renderer {
 		dimensions.size(window_handle);
 		GL20.glViewport(0, 0, dimensions.x[0], dimensions.y[0]);
 		GL20.glEnable(GL20.GL_DEPTH_TEST);
+		GL20.glDepthFunc(GL20.GL_LESS);
 
 		System.out.printf("info:  GL version %s, %s.\n", GL20.glGetString(GL20.GL_VERSION), GL20.glGetString(GL20.GL_RENDERER));
 		result.handle_debug(capabilities);
@@ -65,7 +61,7 @@ public final class renderer {
 		}
 	}
 	public void clear() {
-		GL20.glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+		GL20.glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		GL20.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 	}
 	public void draw(vertex_array vao, vertex_buffer vbo, index_buffer ibo, shader shader) {

@@ -24,8 +24,8 @@ public final class orthographic_camera extends camera {
     public Matrix4f view;
     public Matrix4f view_projection;
 
-    private Vector3f position;
-    private float rotation;
+    public Vector3f position;
+    public float rotation;
 
     public orthographic_camera() {
         projection      = new Matrix4f();
@@ -33,27 +33,22 @@ public final class orthographic_camera extends camera {
         view_projection = new Matrix4f();
     }
     public orthographic_camera(final Vector3f position, final float rotation, final float left, final float right, final float bottom, final float top) {
-        this.position   = position;
+        this.position   = position.mul(-1.0f);
         this.rotation   = rotation;
         view            = new Matrix4f().identity();
         projection      = new Matrix4f().ortho(left, right, bottom, top, -1.0f, 1.0f);
         view_projection = new Matrix4f();
         projection.mul(view, view_projection);
     }
-    public Matrix4f calculate_view() {
+    public Matrix4f calculate() {
+        /* Remove the need for matrix inversion. */
         Matrix4f transform  = new Matrix4f().identity().translate(position);
-        Matrix4f rotation   = new Matrix4f().identity().rotation(this.rotation, new Vector3f(0, 0, 1));
-        transform.mul(rotation);
-        transform.invert(view);
+        Matrix4f rotation   = new Matrix4f().identity().rotation((float)Math.toRadians(-this.rotation), new Vector3f(0, 0, 1));
+        view = transform.mul(rotation);
         view_projection = projection.mul(view, view_projection);
         return view_projection;
     }
-    public void set_position(final Vector3f position) {
-        this.position = position;
-        view_projection = calculate_view();
-    }
-    public void set_rotation(final float rotation) {
-        this.rotation = rotation;
-        view_projection = calculate_view();
-    }
+	public void set_projection(final float left, final float right, final float bottom, final float top) {
+		projection = new Matrix4f().ortho(left, right, bottom, top, -1.0f, 1.0f);
+	}
 }

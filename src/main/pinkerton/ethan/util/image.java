@@ -32,6 +32,7 @@ public final class image {
 		int w[] = new int[1];
 		int h[] = new int[1];
 		int c[] = new int[1];
+		STBImage.stbi_set_flip_vertically_on_load(true);
 		if (!STBImage.stbi_info(path, w, h, c)) {
 			throw new IOException("STB image error, check file exists and data integrity");
 		}
