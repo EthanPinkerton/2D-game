@@ -15,6 +15,7 @@
  */
 package pinkerton.ethan;
 
+import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 import pinkerton.ethan.window.*;
@@ -29,36 +30,48 @@ public final class main {
 
 
 	public static final float vbo_data[] = {
-			-0.5f,  0.25f,  0.0f,  0.0f,  1.0f,
-			 0.5f,  0.25f,  0.0f,  1.0f,  1.0f,
-       		 0.5f, -0.25f,  0.0f,  1.0f,  0.0f,
-			-0.5f, -0.25f,  0.0f,  0.0f,  0.0f,
-	};
-	public static final float vbo_instance_data[] = {
-			0.0f, 0.0f,
-			2.0f, 0.0f,
-			0.0f, -2.0f,
-			2.0f, -2.0f,
+			-1.0f,   1.0f,  0.0f,  0.0f,  1.0f,
+			 1.0f,   1.0f,  0.0f,  1.0f,  1.0f,
+       		 1.0f,  -1.0f,  0.0f,  1.0f,  0.0f,
+			-1.0f,  -1.0f,  0.0f,  0.0f,  0.0f,
 	};
 	public static int ibo_data[] = {
 		0, 1, 2, 2, 3, 0
 	};
 
+	public static float[] generate_instance_data(int rows, int columns) {
+		float data[] = new float[4 * (rows * columns)];
+		for (int i = 0; i < rows; ++i) {
+			for (int j = 0; j < columns; ++j) {
+				int target_texture = (int) (Math.random() * 36);
+				Vector2f offset = texture.calculate_offsets(6, target_texture);
+				int data_offset = ((i * rows) + j) * 4;
+				data[data_offset + 0] =  2.0f * j;
+				data[data_offset + 1] = -2.0f * i;
+				data[data_offset + 2] = offset.x;
+				data[data_offset + 3] = offset.y;
+			}
+		}
+		return data;
+	}
+
 	public static void main(String[] argv) {
 		window   w = window.create("Hello World", 1440, 810, false);
 		renderer r = renderer.create(w);
 		shader   s = shader.create(String.format("%s/shaders/tile.glsl.vert", assets), String.format("%s/shaders/tile.glsl.frag", assets));
-		texture  t = texture.create(String.format("%s/textures/portalgun2.png", assets));
-		orthographic_camera o = new orthographic_camera(new Vector3f(0f, 0f, 0f), 0, -3f, 3f, -3f, 3f);
+		texture  t = texture.create(String.format("%s/textures/tilemap.png", assets));
+		orthographic_camera o = new orthographic_camera(new Vector3f(0f, 0f, 0f), 0, -10.0f, 10f, -10f, 10f);
 
 		vertex_array  vao = vertex_array.create();
 		vertex_buffer vbo = vertex_buffer.create(vbo_data, true);
-		vertex_buffer sbo = vertex_buffer.create(vbo_instance_data, true);
+		vertex_buffer sbo = vertex_buffer.create(generate_instance_data(5, 5), true);
 		index_buffer  ibo = index_buffer.create(ibo_data, true);
 		vao.push(new vertex_array_attribute(3, GL30.GL_FLOAT));
 		vao.push(new vertex_array_attribute(2, GL30.GL_FLOAT));
 		vao.push(new vertex_array_attribute(2, GL30.GL_FLOAT));
+		vao.push(new vertex_array_attribute(2, GL30.GL_FLOAT));
 		vao.enable_instanced(2, vbo, sbo);
+
 		s.bind();
 		o.calculate();
 		s.upload_mat4f(o.view_projection, "in_projection");
@@ -68,9 +81,7 @@ public final class main {
 
 		while (!GLFW.glfwWindowShouldClose(w.handle)) {
 			r.clear();
-
-			GL33.glDrawElementsInstanced(GL30.GL_TRIANGLES, ibo_data.length, GL30.GL_UNSIGNED_INT, 0, 4);
-
+			GL33.glDrawElementsInstanced(GL30.GL_TRIANGLES, ibo_data.length, GL30.GL_UNSIGNED_INT, 0, 25);
 			GLFW.glfwSwapBuffers(w.handle);
 			GLFW.glfwPollEvents();
 		}

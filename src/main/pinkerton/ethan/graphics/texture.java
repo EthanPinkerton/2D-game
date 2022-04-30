@@ -18,6 +18,7 @@ package pinkerton.ethan.graphics;
 
 import pinkerton.ethan.util.image;
 import org.lwjgl.opengl.GL20;
+import org.joml.Vector2f;
 
 public final class texture {
 	public int id;
@@ -65,6 +66,13 @@ public final class texture {
 	public void bind() {
 		bind(0);
 	}
+	/* Should be square. */
+	public static Vector2f calculate_offsets(final int rows, final int target) {
+		int column = target % rows;
+		int row    = target / rows;
+		return new Vector2f((float)column / (float)rows, (float)row / (float)rows);
+	}
+
 	public void unbind() {
 		GL20.glBindTexture(GL20.GL_TEXTURE_2D, 0);
 	}
