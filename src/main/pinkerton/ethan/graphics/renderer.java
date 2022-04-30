@@ -49,6 +49,9 @@ public final class renderer {
 		GL20.glEnable(GL20.GL_DEPTH_TEST);
 		GL20.glDepthFunc(GL20.GL_LESS);
 
+		GL30.glEnable(GL30.GL_BLEND);
+		GL30.glBlendFunc(GL30.GL_SRC_ALPHA, GL30.GL_ONE_MINUS_SRC_ALPHA);
+
 		System.out.printf("info:  GL version %s, %s.\n", GL20.glGetString(GL20.GL_VERSION), GL20.glGetString(GL20.GL_RENDERER));
 		result.handle_debug(capabilities);
 		return result;

@@ -22,90 +22,62 @@ import pinkerton.ethan.graphics.*;
 import pinkerton.ethan.scene.*;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL30;
+import org.lwjgl.opengl.GL33;
 
 public final class main {
 	public static final String assets = "res";
 
+
+	public static final float vbo_data[] = {
+			-0.5f,  0.25f,  0.0f,  0.0f,  1.0f,
+			 0.5f,  0.25f,  0.0f,  1.0f,  1.0f,
+       		 0.5f, -0.25f,  0.0f,  1.0f,  0.0f,
+			-0.5f, -0.25f,  0.0f,  0.0f,  0.0f,
+	};
+	public static final float vbo_instance_data[] = {
+			0.0f, 0.0f,
+			2.0f, 0.0f,
+			0.0f, -2.0f,
+			2.0f, -2.0f,
+	};
+	public static int ibo_data[] = {
+		0, 1, 2, 2, 3, 0
+	};
+
 	public static void main(String[] argv) {
 		window   w = window.create("Hello World", 1440, 810, false);
 		renderer r = renderer.create(w);
-		shader   s = shader.create(String.format("%s/shaders/texture-projected.glsl.vert", assets), String.format("%s/shaders/texture-projected.glsl.frag", assets));
-		texture  t = texture.create(String.format("%s/textures/opengl.jpeg", assets));
-		orthographic_camera o = new orthographic_camera(new Vector3f(0f, 0f, 0f), 0f, -5f, 5f, -5f, 5f);
+		shader   s = shader.create(String.format("%s/shaders/tile.glsl.vert", assets), String.format("%s/shaders/tile.glsl.frag", assets));
+		texture  t = texture.create(String.format("%s/textures/portalgun2.png", assets));
+		orthographic_camera o = new orthographic_camera(new Vector3f(0f, 0f, 0f), 0, -3f, 3f, -3f, 3f);
 
-		if (s == null || w == null || r == null) {
-			return;
-		}
-		final float vertices[] = {
-			 -1.0f,  1.0f,  0.0f,  1.0f, 0.0f,  1.0f, 0.0f, 0.0f,
-		     0.0f,	 1.0f,  0.0f,  0.0f, 0.0f,  0.0f, 1.0f, 0.0f,
-		     0.0f,   0.0f,  0.0f,  0.0f, 1.0f,  0.0f, 0.0f, 1.0f,
-		    -1.0f,   0.0f,  0.0f,  1.0f, 1.0f,  1.0f, 1.0f, 1.0f,
-
-			2.0f,  0.0f,  0.0f,  0.0f, 1.0f,    1.0f, 1.0f, 1.0f,
-			3.0f,	 0.0f,  0.0f,  1.0f, 1.0f,  0.0f, 0.0f, 1.0f,
-			3.0f,  -1.0f,  0.0f,  1.0f, 0.0f,   0.0f, 1.0f, 0.0f,
-			2.0f,   -1.0f,  0.0f,  0.0f, 0.0f,  1.0f, 0.0f, 0.0f
-
-		};
-
-		vertex_array vao = vertex_array.create();
-		vao.bind();
-		vertex_buffer vbo = vertex_buffer.create(vertices, true);
-		vao.push(new vertex_array_attribute(3, 0));
-		vao.push(new vertex_array_attribute(2, 12));
-		vao.push(new vertex_array_attribute(3, 20));
-		vao.enable();
+		vertex_array  vao = vertex_array.create();
+		vertex_buffer vbo = vertex_buffer.create(vbo_data, true);
+		vertex_buffer sbo = vertex_buffer.create(vbo_instance_data, true);
+		index_buffer  ibo = index_buffer.create(ibo_data, true);
+		vao.push(new vertex_array_attribute(3, GL30.GL_FLOAT));
+		vao.push(new vertex_array_attribute(2, GL30.GL_FLOAT));
+		vao.push(new vertex_array_attribute(2, GL30.GL_FLOAT));
+		vao.enable_instanced(2, vbo, sbo);
 		s.bind();
-		final int indexes[] = {
-			0, 1, 2, 2, 3, 0,
-			4, 5, 6, 6, 7, 4,
-		};
-		index_buffer ibo = index_buffer.create(indexes, true);
-		ibo.bind();
+		o.calculate();
+		s.upload_mat4f(o.view_projection, "in_projection");
 
-		s.bind();
-		int color_location = s.get_uniform("in_color");
-		if (color_location != -1) {
-			GL30.glUniform4f(color_location, 0.3f, 0.3f, 0.3f, 1.0f);
-		}
-
-		s.upload_mat4f(o.view_projection, "projection");
-		t.bind();
+		t.bind(0);
+		s.upload_int(0, "in_sampler");
 
 		while (!GLFW.glfwWindowShouldClose(w.handle)) {
 			r.clear();
 
-			GL30.glDrawElements(GL30.GL_TRIANGLES, indexes.length, GL30.GL_UNSIGNED_INT, 0);
+			GL33.glDrawElementsInstanced(GL30.GL_TRIANGLES, ibo_data.length, GL30.GL_UNSIGNED_INT, 0, 4);
 
 			GLFW.glfwSwapBuffers(w.handle);
 			GLFW.glfwPollEvents();
-
-			if (GLFW.glfwGetKey(w.handle, GLFW.GLFW_KEY_P) == GLFW.GLFW_PRESS)
-				GL30.glPolygonMode(GL30.GL_FRONT_AND_BACK, GL30.GL_LINE);
-			if (GLFW.glfwGetKey(w.handle, GLFW.GLFW_KEY_U) == GLFW.GLFW_PRESS)
-				GL30.glPolygonMode(GL30.GL_FRONT_AND_BACK, GL30.GL_FILL);
-			if (GLFW.glfwGetKey(w.handle, GLFW.GLFW_KEY_A) == GLFW.GLFW_PRESS)
-				o.position.x += 0.1;
-			if (GLFW.glfwGetKey(w.handle, GLFW.GLFW_KEY_D) == GLFW.GLFW_PRESS)
-				o.position.x -= 0.1;
-			if (GLFW.glfwGetKey(w.handle, GLFW.GLFW_KEY_S) == GLFW.GLFW_PRESS)
-				o.position.y += 0.1;
-			if (GLFW.glfwGetKey(w.handle, GLFW.GLFW_KEY_W) == GLFW.GLFW_PRESS)
-				o.position.y -= 0.1;
-
-			o.rotation += 1;
-			o.calculate();
-			s.upload_mat4f(o.view_projection, "projection");
 		}
-		vao.disable();
-		vao.unbind();
-		ibo.unbind();
 
 		vao.destroy();
 		vbo.destroy();
 		ibo.destroy();
-		w.destroy();
 		s.destroy();
 		t.destroy();
 	}

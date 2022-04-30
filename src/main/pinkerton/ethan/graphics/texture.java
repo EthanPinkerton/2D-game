@@ -44,7 +44,7 @@ public final class texture {
 		}
 
 		/* Translate the channel count to the integer values used by opengl. */
-		final int format = GL20.GL_RGB;
+		final int format = (data.channels == 3) ? GL20.GL_RGB : GL20.GL_RGBA;
 
 		/* Bind the texture. */
 		result.bind();
@@ -55,7 +55,6 @@ public final class texture {
 		GL20.glTexParameteri(GL20.GL_TEXTURE_2D, GL20.GL_TEXTURE_MIN_FILTER, GL20.GL_LINEAR);
 		GL20.glTexParameteri(GL20.GL_TEXTURE_2D, GL20.GL_TEXTURE_MAG_FILTER, GL20.GL_LINEAR);
 		GL20.glTexImage2D(GL20.GL_TEXTURE_2D, 0, format, data.width, data.height, 0, format, GL20.GL_UNSIGNED_BYTE, data.data);
-		result.unbind();
 		return (GL20.glGetError() == GL20.GL_NO_ERROR) ? result : null;
 	}
 	public void bind(final int slot_offset) {

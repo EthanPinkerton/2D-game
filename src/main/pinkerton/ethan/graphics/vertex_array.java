@@ -17,23 +17,24 @@
 package pinkerton.ethan.graphics;
 
 import org.lwjgl.opengl.GL30;
-import java.util.Queue;
-import java.util.LinkedList;
+import org.lwjgl.opengl.GL33;
+import java.util.ArrayList;
 
 
 public final class vertex_array implements buffer {
 	public int id;
 	public int accumulation;
-	public Queue<vertex_array_attribute> attributes;
+	public ArrayList<vertex_array_attribute> attributes;
 
 	public vertex_array() {
-		attributes = new LinkedList<vertex_array_attribute>();
+		attributes = new ArrayList<vertex_array_attribute>();
 		accumulation = 0;
 	}
 
 	public static vertex_array create() {
 		vertex_array result = new vertex_array();
 		result.id = GL30.glGenVertexArrays();
+		result.bind();
 		return result;
 	}
 
@@ -42,21 +43,56 @@ public final class vertex_array implements buffer {
 		return attributes.add(insertion);
 	}
 
-	public void pop() {
-		attributes.remove();
-	}
-
 	public void bind() {
 		GL30.glBindVertexArray(id);
 	}
 
-	public void enable() {
-		int index = 0;
-		for (vertex_array_attribute a : attributes) {
-			GL30.glVertexAttribPointer(index, a.count, GL30.GL_FLOAT, false, accumulation, a.start);
-			GL30.glEnableVertexAttribArray(index);
-			++index;
+	private static int type_to_bytes(final int type) {
+		switch (type) {
+			case GL30.GL_UNSIGNED_BYTE:
+				return 1;
+			case GL30.GL_BYTE:
+				return 1;
+			case GL30.GL_UNSIGNED_SHORT:
+				return 2;
+			case GL30.GL_SHORT:
+				return 2;
+			case GL30.GL_UNSIGNED_INT:
+				return 4;
+			case GL30.GL_INT:
+				return 4;
+			case GL30.GL_FLOAT:
+				return 4;
 		}
+		return 8;
+	}
+
+	private void enable(vertex_buffer buffer, final int start_index, final int end_index, final int accumulation) {
+		if (buffer != null)
+			buffer.bind();
+		long pointer = 0;
+		for (int i = start_index; i < end_index; ++i) {
+			vertex_array_attribute a = attributes.get(i);
+			GL30.glVertexAttribPointer(i, a.count, a.type, false, accumulation, pointer);
+			GL30.glEnableVertexAttribArray(i);
+			pointer += a.count * type_to_bytes(a.type);
+		}
+	}
+
+
+	public void enable() {
+		enable(null, 0, attributes.size(), accumulation);
+	}
+	public void enable_instanced(final int instance_attributes_index, vertex_buffer static_buffer, vertex_buffer instance_buffer) {
+		int static_accumilation = 0;
+		for (int i = 0; i < instance_attributes_index; ++i) {
+			vertex_array_attribute a = attributes.get(i);
+			static_accumilation += a.count * type_to_bytes(a.type);
+		}
+		enable(static_buffer, 0, instance_attributes_index, static_accumilation);
+		enable(instance_buffer, instance_attributes_index, attributes.size(), accumulation - static_accumilation);
+		for (int i = instance_attributes_index; i < attributes.size(); ++i)
+			GL33.glVertexAttribDivisor(i, 1);
 	}
 
 	public void disable() {

@@ -36,8 +36,6 @@ public final class index_buffer implements buffer {
 		GL20.glBufferData(GL20.GL_ELEMENT_ARRAY_BUFFER, upload_data, (is_static) ? GL20.GL_STATIC_DRAW : GL20.GL_DYNAMIC_DRAW);
 		MemoryUtil.memFree(upload_data);
 
-		/* Unbind. */
-		result.unbind();
 		return (GL20.glGetError() == GL20.GL_NO_ERROR) ? result : null;
 	}
 

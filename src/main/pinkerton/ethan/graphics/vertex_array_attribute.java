@@ -17,11 +17,11 @@
 package pinkerton.ethan.graphics;
 
 public final class vertex_array_attribute {
-	public int start;
+	public int type;
 	public int count;
 	
-	public vertex_array_attribute(final int count, final int start) {
+	public vertex_array_attribute(final int count, final int type) {
 		this.count  = count;
-		this.start = start;
+		this.type   = type;
 	}
 }
