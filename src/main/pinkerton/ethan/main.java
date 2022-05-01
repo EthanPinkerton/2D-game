@@ -17,13 +17,24 @@ package pinkerton.ethan;
 
 import org.joml.Vector2f;
 import org.joml.Vector3f;
-import org.lwjgl.BufferUtils;
+import org.joml.Vector4f;
 import pinkerton.ethan.window.*;
 import pinkerton.ethan.graphics.*;
 import pinkerton.ethan.scene.*;
+import pinkerton.ethan.levels.*;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GL33;
+
+class generated {
+	public float data[];
+	public int members;
+	public generated(final float data[], final int members) {
+		this.data = data;
+		this.members = members;
+	}
+}
+
 
 public final class main {
 	public static final String assets = "res";
@@ -39,32 +50,39 @@ public final class main {
 		0, 1, 2, 2, 3, 0
 	};
 
-	public static float[] generate_instance_data(int rows, int columns) {
-		float data[] = new float[4 * (rows * columns)];
-		for (int i = 0; i < rows; ++i) {
-			for (int j = 0; j < columns; ++j) {
-				int target_texture = (int) (Math.random() * 36);
-				Vector2f offset = texture.calculate_offsets(6, target_texture);
-				int data_offset = ((i * rows) + j) * 4;
-				data[data_offset + 0] =  2.0f * j;
-				data[data_offset + 1] = -2.0f * i;
-				data[data_offset + 2] = offset.x;
-				data[data_offset + 3] = offset.y;
+	public static generated generate_instance_data() {
+		loader l = new loader(String.format("%s/levels/sample.map", assets));
+		l.load();
+		float data[] = new float[4 * l.columns * l.rows];
+		char it;
+		int i = 0;
+		while ((it = l.iterate()) != '\0') {
+			int x = (l.iterator - 1) % l.columns;
+			int y = (l.iterator - 1) / l.columns;
+			Vector4f constructed;
+			if ((constructed = loader.construct(it, x, y)) != null) {
+				data[4 * i + 0] = constructed.x;
+				data[4 * i + 1] = constructed.y;
+				data[4 * i + 2] = constructed.z;
+				data[4 * i + 3] = constructed.w;
+				++i;
 			}
 		}
-		return data;
+		return new generated(data, i);
 	}
 
 	public static void main(String[] argv) {
-		window   w = window.create("Hello World", 1440, 810, false);
+		window   w = window.create("2D Portal", 1440, 810, false);
 		renderer r = renderer.create(w);
 		shader   s = shader.create(String.format("%s/shaders/tile.glsl.vert", assets), String.format("%s/shaders/tile.glsl.frag", assets));
 		texture  t = texture.create(String.format("%s/textures/tilemap.png", assets));
-		orthographic_camera o = new orthographic_camera(new Vector3f(0f, 0f, 0f), 0, -10.0f, 10f, -10f, 10f);
+		orthographic_camera o = new orthographic_camera(new Vector3f(-5, 5, 0f), 0, -20.0f, 20f, -20f, 20f);
+
+		generated g = generate_instance_data();
 
 		vertex_array  vao = vertex_array.create();
 		vertex_buffer vbo = vertex_buffer.create(vbo_data, true);
-		vertex_buffer sbo = vertex_buffer.create(generate_instance_data(5, 5), true);
+		vertex_buffer sbo = vertex_buffer.create(g.data, g.members, true);
 		index_buffer  ibo = index_buffer.create(ibo_data, true);
 		vao.push(new vertex_array_attribute(3, GL30.GL_FLOAT));
 		vao.push(new vertex_array_attribute(2, GL30.GL_FLOAT));
@@ -81,7 +99,15 @@ public final class main {
 
 		while (!GLFW.glfwWindowShouldClose(w.handle)) {
 			r.clear();
-			GL33.glDrawElementsInstanced(GL30.GL_TRIANGLES, ibo_data.length, GL30.GL_UNSIGNED_INT, 0, 25);
+
+			if (GLFW.glfwGetKey(w.handle, GLFW.GLFW_KEY_P) == GLFW.GLFW_PRESS) {
+				GL30.glPolygonMode(GL30.GL_FRONT_AND_BACK, GL30.GL_LINE);
+			}
+			if (GLFW.glfwGetKey(w.handle, GLFW.GLFW_KEY_O) == GLFW.GLFW_PRESS) {
+				GL30.glPolygonMode(GL30.GL_FRONT_AND_BACK, GL30.GL_FILL);
+			}
+
+			GL33.glDrawElementsInstanced(GL30.GL_TRIANGLES, ibo_data.length, GL30.GL_UNSIGNED_INT, 0, g.members);
 			GLFW.glfwSwapBuffers(w.handle);
 			GLFW.glfwPollEvents();
 		}

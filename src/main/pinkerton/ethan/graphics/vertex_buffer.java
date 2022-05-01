@@ -24,15 +24,14 @@ public final class vertex_buffer implements buffer {
 	public int id;
 
 	public static vertex_buffer create(final float data[], final boolean is_static) {
+		return vertex_buffer.create(data, data.length, is_static);
+	}
+	public static vertex_buffer create(final float data[], final int length, final boolean is_static) {
 		vertex_buffer result = new vertex_buffer();
 		result.id = GL20.glGenBuffers();
 		/* Bind and upload. */
 		result.bind();
 
-		/* 
-		 * OpenGL and java is like a forced marriage, kinda works but a bit jank.
-		 * We need to store our floating point data into an FloatBuffer, this is probaly due to the way that C expects data compared to java.
-		 */
 		FloatBuffer upload_data = MemoryUtil.memAllocFloat(data.length);
 		upload_data.put(data).flip();
 

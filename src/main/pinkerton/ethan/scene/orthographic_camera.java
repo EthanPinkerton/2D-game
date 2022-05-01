@@ -33,7 +33,7 @@ public final class orthographic_camera extends camera {
         view_projection = new Matrix4f();
     }
     public orthographic_camera(final Vector3f position, final float rotation, final float left, final float right, final float bottom, final float top) {
-        this.position   = position.mul(-1.0f);
+        this.position   = position;
         this.rotation   = rotation;
         view            = new Matrix4f().identity();
         projection      = new Matrix4f().ortho(left, right, bottom, top, -1.0f, 1.0f);
