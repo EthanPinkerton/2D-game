@@ -21,15 +21,18 @@ import org.lwjgl.BufferUtils;
 import pinkerton.ethan.util.file_handler;
 import org.lwjgl.opengl.GL20;
 
+import java.nio.Buffer;
 import java.nio.FloatBuffer;
 import java.util.HashMap;
 
 public final class shader {
+    private FloatBuffer upload_cache;
     private int id;
     public HashMap<String, Integer> uniform_cache;
 
     public shader() {
         uniform_cache = new HashMap<String, Integer>();
+        upload_cache  = BufferUtils.createFloatBuffer(16);
     }
 
     private static boolean validate_compiler(final int glue, final String path) {
@@ -123,9 +126,8 @@ public final class shader {
         int location;
         if ((location = get_uniform(name)) < 0)
             return -1;
-        FloatBuffer buffer = BufferUtils.createFloatBuffer(16);
-        matrix.get(buffer);
-        GL20.glUniformMatrix4fv(location, false, buffer);
+        matrix.get(upload_cache);
+        GL20.glUniformMatrix4fv(location, false, upload_cache);
         return 0;
     }
 

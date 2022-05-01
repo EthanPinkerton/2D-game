@@ -15,7 +15,7 @@
  */
 package pinkerton.ethan;
 
-import org.joml.Vector2f;
+import java.util.Arrays;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 import pinkerton.ethan.window.*;
@@ -24,7 +24,8 @@ import pinkerton.ethan.scene.*;
 import pinkerton.ethan.levels.*;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL30;
-import org.lwjgl.opengl.GL33;
+
+import java.lang.reflect.Array;
 
 class generated {
 	public float data[];
@@ -68,34 +69,23 @@ public final class main {
 				++i;
 			}
 		}
-		return new generated(data, i);
+		float shrunk[] = Arrays.copyOf(data, i * 4);
+		System.out.println(shrunk.length);
+		return new generated(shrunk, i);
 	}
 
 	public static void main(String[] argv) {
 		window   w = window.create("2D Portal", 1440, 810, false);
 		renderer r = renderer.create(w);
-		shader   s = shader.create(String.format("%s/shaders/tile.glsl.vert", assets), String.format("%s/shaders/tile.glsl.frag", assets));
-		texture  t = texture.create(String.format("%s/textures/tilemap.png", assets));
-		orthographic_camera o = new orthographic_camera(new Vector3f(-5, 5, 0f), 0, -20.0f, 20f, -20f, 20f);
+		orthographic_camera o = new orthographic_camera(new Vector3f(-0, 0, 0f), 0, -10.0f, 10f, -10f, 10f);
 
 		generated g = generate_instance_data();
+		vertex_buffer quad_vbo = vertex_buffer.create(vbo_data, true);
+		index_buffer  quad_ibo = index_buffer.create(ibo_data, true);
+		tiles t = new tiles(quad_vbo, quad_ibo, g.data, g.members, "res");
 
-		vertex_array  vao = vertex_array.create();
-		vertex_buffer vbo = vertex_buffer.create(vbo_data, true);
-		vertex_buffer sbo = vertex_buffer.create(g.data, g.members, true);
-		index_buffer  ibo = index_buffer.create(ibo_data, true);
-		vao.push(new vertex_array_attribute(3, GL30.GL_FLOAT));
-		vao.push(new vertex_array_attribute(2, GL30.GL_FLOAT));
-		vao.push(new vertex_array_attribute(2, GL30.GL_FLOAT));
-		vao.push(new vertex_array_attribute(2, GL30.GL_FLOAT));
-		vao.enable_instanced(2, vbo, sbo);
-
-		s.bind();
+		o.rotation = 135;
 		o.calculate();
-		s.upload_mat4f(o.view_projection, "in_projection");
-
-		t.bind(0);
-		s.upload_int(0, "in_sampler");
 
 		while (!GLFW.glfwWindowShouldClose(w.handle)) {
 			r.clear();
@@ -106,16 +96,11 @@ public final class main {
 			if (GLFW.glfwGetKey(w.handle, GLFW.GLFW_KEY_O) == GLFW.GLFW_PRESS) {
 				GL30.glPolygonMode(GL30.GL_FRONT_AND_BACK, GL30.GL_FILL);
 			}
+			t.draw(o.view_projection);
 
-			GL33.glDrawElementsInstanced(GL30.GL_TRIANGLES, ibo_data.length, GL30.GL_UNSIGNED_INT, 0, g.members);
 			GLFW.glfwSwapBuffers(w.handle);
 			GLFW.glfwPollEvents();
 		}
-
-		vao.destroy();
-		vbo.destroy();
-		ibo.destroy();
-		s.destroy();
 		t.destroy();
 	}
 }

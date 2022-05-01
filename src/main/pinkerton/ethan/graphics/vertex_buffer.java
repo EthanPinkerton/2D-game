@@ -32,7 +32,7 @@ public final class vertex_buffer implements buffer {
 		/* Bind and upload. */
 		result.bind();
 
-		FloatBuffer upload_data = MemoryUtil.memAllocFloat(data.length);
+		FloatBuffer upload_data = MemoryUtil.memAllocFloat(length);
 		upload_data.put(data).flip();
 
 		GL20.glBufferData(GL20.GL_ARRAY_BUFFER, upload_data, (is_static) ? GL20.GL_STATIC_DRAW : GL20.GL_DYNAMIC_DRAW);
