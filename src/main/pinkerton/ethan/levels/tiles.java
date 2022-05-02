@@ -61,11 +61,12 @@ public final class tiles {
         program.upload_int(0, "in_sampler");
         program.unbind();
     }
-    public void draw(Matrix4f view_projection) {
+    public void draw(final Matrix4f camera_projection, final int texture_slot) {
         vao.bind();
-        texture_map.bind();
+        texture_map.bind(texture_slot);
         program.bind();
-        program.upload_mat4f(view_projection, "in_projection");
+        program.upload_int(texture_slot, "in_sampler");
+        program.upload_mat4f(camera_projection, "in_projection");
         GL33.glDrawElementsInstanced(GL33.GL_TRIANGLES, 6, GL33.GL_UNSIGNED_INT, 0, tile_count);
     }
     public void destroy() {

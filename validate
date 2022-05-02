@@ -1,0 +1,3 @@
+#!/bin/sh
+
+ls res/shaders | grep -i '\.glsl' | xargs -I {} glslangValidator res/shaders/{}

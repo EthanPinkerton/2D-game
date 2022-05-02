@@ -15,9 +15,11 @@
  */
 package pinkerton.ethan;
 
+import java.sql.ShardingKey;
 import java.util.Arrays;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
+import org.lwjgl.glfw.GLFWKeyCallbackI;
 import pinkerton.ethan.window.*;
 import pinkerton.ethan.graphics.*;
 import pinkerton.ethan.scene.*;
@@ -36,6 +38,21 @@ class generated {
 	}
 }
 
+class key_callback implements GLFWKeyCallbackI {
+	@Override
+	public void invoke(long window, int key, int scancode, int action, int mods) {
+		switch (key) {
+			case GLFW.GLFW_KEY_P: {
+				GL30.glPolygonMode(GL30.GL_FRONT_AND_BACK, GL30.GL_LINE);
+				break;
+			}
+			case GLFW.GLFW_KEY_O: {
+				GL30.glPolygonMode(GL30.GL_FRONT_AND_BACK, GL30.GL_FILL);
+				break;
+			}
+		}
+	}
+}
 
 public final class main {
 	public static final String assets = "res";
@@ -69,34 +86,47 @@ public final class main {
 				++i;
 			}
 		}
-		float shrunk[] = Arrays.copyOf(data, i * 4);
-		System.out.println(shrunk.length);
-		return new generated(shrunk, i);
+		return new generated(Arrays.copyOf(data, i * 4), i);
 	}
 
 	public static void main(String[] argv) {
 		window   w = window.create("2D Portal", 1440, 810, false);
 		renderer r = renderer.create(w);
 		orthographic_camera o = new orthographic_camera(new Vector3f(-0, 0, 0f), 0, -10.0f, 10f, -10f, 10f);
+		shader es = shader.create("res/shaders/entity.glsl.vert", "res/shaders/entity.glsl.frag");
 
 		generated g = generate_instance_data();
 		vertex_buffer quad_vbo = vertex_buffer.create(vbo_data, true);
 		index_buffer  quad_ibo = index_buffer.create(ibo_data, true);
 		tiles t = new tiles(quad_vbo, quad_ibo, g.data, g.members, "res");
+		player p = new player(quad_vbo, quad_ibo, "res");
 
-		o.rotation = 135;
+		GLFW.glfwSetKeyCallback(w.handle, new key_callback());
 		o.calculate();
+		p.position.x -= 1f;
+		p.rotation = 135f;
+		p.calculate();
+
 
 		while (!GLFW.glfwWindowShouldClose(w.handle)) {
 			r.clear();
 
-			if (GLFW.glfwGetKey(w.handle, GLFW.GLFW_KEY_P) == GLFW.GLFW_PRESS) {
-				GL30.glPolygonMode(GL30.GL_FRONT_AND_BACK, GL30.GL_LINE);
+			p.rotation += 1f;
+			float v = (float)(Math.sin(GLFW.glfwGetTime())) * 5;
+			p.scale = new Vector3f(v, v, v);
+			p.calculate();
+
+			p.draw(es, o.view_projection, 0);
+			t.draw(o.view_projection, 1);
+
+			if (GLFW.glfwGetKey(w.handle, GLFW.GLFW_KEY_D) == GLFW.GLFW_PRESS) {
+				o.position.x -= 0.5;
+				o.calculate();
 			}
-			if (GLFW.glfwGetKey(w.handle, GLFW.GLFW_KEY_O) == GLFW.GLFW_PRESS) {
-				GL30.glPolygonMode(GL30.GL_FRONT_AND_BACK, GL30.GL_FILL);
+			if (GLFW.glfwGetKey(w.handle, GLFW.GLFW_KEY_A) == GLFW.GLFW_PRESS) {
+				o.position.x += 0.5;
+				o.calculate();
 			}
-			t.draw(o.view_projection);
 
 			GLFW.glfwSwapBuffers(w.handle);
 			GLFW.glfwPollEvents();
