@@ -40,15 +40,17 @@ public final class orthographic_camera extends camera {
         view_projection = new Matrix4f();
         projection.mul(view, view_projection);
     }
-    public Matrix4f calculate() {
+    public void calculate() {
         /* Remove the need for matrix inversion. */
         Matrix4f transform  = new Matrix4f().identity().translate(position);
         Matrix4f rotation   = new Matrix4f().identity().rotation((float)Math.toRadians(-this.rotation), new Vector3f(0, 0, 1));
         view = transform.mul(rotation);
         view_projection = projection.mul(view, view_projection);
-        return view_projection;
     }
 	public void set_projection(final float left, final float right, final float bottom, final float top) {
 		projection = new Matrix4f().ortho(left, right, bottom, top, -1.0f, 1.0f);
 	}
+    public Matrix4f get_view() {
+        return view_projection;
+    }
 }

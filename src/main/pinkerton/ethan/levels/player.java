@@ -19,6 +19,7 @@ package pinkerton.ethan.levels;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.opengl.GL30;
+import org.lwjgl.opengl.GL33;
 import pinkerton.ethan.graphics.*;
 
 public class player extends entity {
@@ -34,7 +35,7 @@ public class player extends entity {
 
         if ((vao = vertex_array.create()) == null)
             return;
-        if ((texture_map = texture.create(String.format("%s/textures/icon.jpeg", asset_path))) == null) {
+        if ((texture_map = texture.create(String.format("%s/textures/mosaic.jpeg", asset_path))) == null) {
             vao.destroy();
             return;
         }
@@ -47,8 +48,8 @@ public class player extends entity {
 
     @Override
     public void calculate() {
-        model_matrix = new Matrix4f().identity().translate(position);
-        Matrix4f rotation_matrix = new Matrix4f().identity().rotate((float)Math.toRadians((float)rotation), new Vector3f(0f, 0f, 1f));
+        model_matrix = new Matrix4f().identity().translate(new Vector3f(-position.x, -position.y, position.z));
+        Matrix4f rotation_matrix = new Matrix4f().identity().rotate((float)Math.toRadians((float)-rotation), new Vector3f(0f, 0f, 1f));
         model_matrix.mul(rotation_matrix, model_matrix);
         model_matrix.scale(scale);
     }
@@ -59,6 +60,6 @@ public class player extends entity {
         program.upload_int(texture_slot, "in_sampler");
         program.upload_mat4f(model_matrix, "in_model");
         program.upload_mat4f(camera_projection, "in_projection");
-        GL30.glDrawElements(GL30.GL_TRIANGLES, 6 , GL30.GL_UNSIGNED_INT, 0);
+        GL33.glDrawElements(GL30.GL_TRIANGLES, 6 , GL30.GL_UNSIGNED_INT, 0);
     }
 }

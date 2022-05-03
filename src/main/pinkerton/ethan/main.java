@@ -28,6 +28,7 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL30;
 
 import java.lang.reflect.Array;
+import java.util.Objects;
 
 class generated {
 	public float data[];
@@ -104,30 +105,62 @@ public final class main {
 		GLFW.glfwSetKeyCallback(w.handle, new key_callback());
 		o.calculate();
 		p.position.x -= 1f;
-		p.rotation = 135f;
 		p.calculate();
 
 
+		float view = 10f;
+		double current_time = 0.0f, last_time = 0.0f, delta_time;
 		while (!GLFW.glfwWindowShouldClose(w.handle)) {
+			current_time = GLFW.glfwGetTime();
+			delta_time = current_time - last_time;
+			last_time = current_time;
 			r.clear();
 
-			p.rotation += 1f;
-			float v = (float)(Math.sin(GLFW.glfwGetTime())) * 5;
-			p.scale = new Vector3f(v, v, v);
+			p.rotation += delta_time * 20f;
+			float v = (float)(Math.sin(GLFW.glfwGetTime())) * 3;
+			p.scale = new Vector3f(v, v, 2);
 			p.calculate();
 
 			p.draw(es, o.view_projection, 0);
-			t.draw(o.view_projection, 1);
+			es.upload_vec4(new Vector4f(v / 3, v / 2, -v, 1), "in_color");
 
+			if (GLFW.glfwGetKey(w.handle, GLFW.GLFW_KEY_RIGHT) == GLFW.GLFW_PRESS) {
+				p.position.x -= 10 * delta_time;
+				p.calculate();
+			}
+			if (GLFW.glfwGetKey(w.handle, GLFW.GLFW_KEY_LEFT) == GLFW.GLFW_PRESS) {
+				p.position.x += 10 * delta_time;
+				p.calculate();
+			}
 			if (GLFW.glfwGetKey(w.handle, GLFW.GLFW_KEY_D) == GLFW.GLFW_PRESS) {
-				o.position.x -= 0.5;
+				o.position.x -= 5 * delta_time;
 				o.calculate();
 			}
 			if (GLFW.glfwGetKey(w.handle, GLFW.GLFW_KEY_A) == GLFW.GLFW_PRESS) {
-				o.position.x += 0.5;
+				o.position.x += 5 * delta_time;
+				o.calculate();
+			}
+			if (GLFW.glfwGetKey(w.handle, GLFW.GLFW_KEY_E) == GLFW.GLFW_PRESS) {
+				o.rotation -= 20 * delta_time;
+				o.calculate();
+			}
+			if (GLFW.glfwGetKey(w.handle, GLFW.GLFW_KEY_Q) == GLFW.GLFW_PRESS) {
+				o.rotation += 20 * delta_time;
+				o.calculate();
+			}
+			if (GLFW.glfwGetKey(w.handle, GLFW.GLFW_KEY_W) == GLFW.GLFW_PRESS) {
+				o.set_projection(-view, view, -view, view);
+				view -= 3f * delta_time;
+				o.calculate();
+			}
+			if (GLFW.glfwGetKey(w.handle, GLFW.GLFW_KEY_S) == GLFW.GLFW_PRESS) {
+				o.set_projection(-view, view, -view, view);
+				view += 3f * delta_time;
 				o.calculate();
 			}
 
+			t.draw(o.view_projection, 1);
+			t.program.upload_int(1, "in_greyscale");
 			GLFW.glfwSwapBuffers(w.handle);
 			GLFW.glfwPollEvents();
 		}

@@ -17,6 +17,7 @@
 package pinkerton.ethan.graphics;
 
 import org.joml.Matrix4f;
+import org.joml.Vector4f;
 import org.lwjgl.BufferUtils;
 import pinkerton.ethan.util.file_handler;
 import org.lwjgl.opengl.GL20;
@@ -136,6 +137,13 @@ public final class shader {
         if ((location = get_uniform(name)) < 0)
             return -1;
         GL20.glUniform1i(location, value);
+        return 0;
+    }
+    public int upload_vec4(final Vector4f value, final String name) {
+        int location;
+        if ((location = get_uniform(name)) < 0)
+            return -1;
+        GL20.glUniform4f(location, value.x, value.y, value.z, value.w);
         return 0;
     }
     public void bind() {

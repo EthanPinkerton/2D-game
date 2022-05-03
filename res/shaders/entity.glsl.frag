@@ -4,7 +4,8 @@ out vec4 out_color;
 
 in vec2 p_uv_position;
 uniform sampler2D in_sampler;
+uniform vec4 in_color;
 
 void main() {
-    out_color = texture(in_sampler, p_uv_position); //* vec4(1.0, 0.3, 0.25, 1.0);
+    out_color = texture(in_sampler, p_uv_position) * in_color;
 }

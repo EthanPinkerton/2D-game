@@ -16,5 +16,9 @@
 
 package pinkerton.ethan.scene;
 
+import org.joml.Matrix4f;
+
 public abstract class camera {
+    public abstract void calculate();
+    public abstract Matrix4f get_view();
 }

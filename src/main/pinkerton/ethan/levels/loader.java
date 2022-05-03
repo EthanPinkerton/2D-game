@@ -80,10 +80,14 @@ public final class loader {
     }
     public static int tile_index(final char tile) {
         switch (tile) {
-            case '?':  return 13;
-            case '\n': return -1;
-            case ' ':  return -1;
+            case 'a': return 0;
+            case 'b': return 1;
+            case 'c': return 2;
             case '#':  return 14;
+            case '?':  return 17;
+            case '\n':
+            case ' ':
+                return -1;
         }
         return 14;
     }
